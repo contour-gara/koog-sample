@@ -1,6 +1,9 @@
 [tools]
 java = "corretto-21.0.9.10.1"
 
+[env]
+DEEPSEEK_API_KEY = "dummy"
+
 [tasks.jdeps]
 description = "Show module dependencies of jar"
 run = """
