@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.ktor)
     application
 }
 
@@ -11,9 +12,13 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.guava)
-    testImplementation(libs.junit.jupiter)
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.config.yaml)
+    implementation(libs.logback.classic)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.extensions.ktor)
+    testImplementation(libs.ktor.server.test.host)
 }
 
 kotlin {
@@ -21,7 +26,17 @@ kotlin {
 }
 
 application {
-    mainClass = "org.example.AppKt"
+    mainClass = "org.contourgara.KoogSampleApplicationKt"
+}
+
+ktor {
+    fatJar {
+        archiveFileName.set("${project.name}.jar")
+    }
+}
+
+tasks.jar {
+    archiveFileName.set("${project.name}-plain.jar")
 }
 
 tasks.test {
