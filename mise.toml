@@ -1,3 +1,16 @@
 [tools]
 java = "corretto-21.0.9.10.1"
 
+[tasks.jdeps]
+description = "Show module dependencies of jar"
+run = """
+./gradlew clean app:build -x test
+
+jdeps \
+--print-module-deps \
+--ignore-missing-deps \
+--recursive \
+--multi-release 21 \
+-quiet \
+app/build/libs/app.jar
+"""
