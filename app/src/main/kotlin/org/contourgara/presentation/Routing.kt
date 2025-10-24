@@ -32,15 +32,11 @@ fun Application.configureRouting() {
         post("/translate") {
             try {
                 runBlocking {
-                    val request = call.receive<TranslateRequest>()
-
                     val apiKey = System.getenv("DEEPSEEK_API_KEY")
                         ?: error("The API key is not set.")
 
-                    val deepSeekClient = DeepSeekLLMClient(apiKey)
-
                     val agent = AIAgent(
-                        promptExecutor = SingleLLMPromptExecutor(deepSeekClient),
+                        promptExecutor = SingleLLMPromptExecutor(DeepSeekLLMClient(apiKey)),
                         llmModel = DeepSeekModels.DeepSeekChat,
                         systemPrompt = """
                             You are a native-level English translator who specializes in casual, conversational language.
@@ -50,9 +46,9 @@ fun Application.configureRouting() {
                         temperature = 0.5,
                     )
 
-                    val result = agent.run(request.text)
-
-                    call.respond(HttpStatusCode.OK, TranslateResponse(result))
+                    agent.run(call.receive<TranslateRequest>().text)
+                        .let { TranslateResponse(it) }
+                        .also { call.respond(HttpStatusCode.OK, it) }
                 }
             } catch (ex: IllegalStateException) {
                 call.respond(HttpStatusCode.BadRequest, ex.message ?: "Bad Request")
