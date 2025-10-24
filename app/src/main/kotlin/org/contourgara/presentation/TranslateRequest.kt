@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TranslateRequest(
-    private val text: String,
+    val text: String,
 )

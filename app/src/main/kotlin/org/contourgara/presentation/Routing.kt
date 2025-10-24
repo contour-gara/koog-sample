@@ -29,38 +29,37 @@ fun Application.configureRouting() {
             call.respondText("Hello World!")
         }
 
-        get("/deepseek") {
-            runBlocking {
-                // Get an API key from the DEEPSEEK_API_KEY environment variable
-                val apiKey = System.getenv("DEEPSEEK_API_KEY")
-                    ?: error("The API key is not set.")
-
-                // Create an LLM client
-                val deepSeekClient = DeepSeekLLMClient(apiKey)
-
-                // Create an agent
-                val agent = AIAgent(
-                    // Create a prompt executor using the LLM client
-                    promptExecutor = SingleLLMPromptExecutor(deepSeekClient),
-                    // Provide a model
-                    llmModel = DeepSeekModels.DeepSeekChat
-                )
-
-                // Run the agent
-                val result = agent.run("Hello! How can you help me?")
-                println(result)
-                call.respondText(result)
-            }
-        }
-
         post("/translate") {
             try {
-                val request = call.receive<TranslateRequest>()
-                call.respond(HttpStatusCode.OK, TranslateResponse("Hello World!"))
+                runBlocking {
+                    val request = call.receive<TranslateRequest>()
+
+                    val apiKey = System.getenv("DEEPSEEK_API_KEY")
+                        ?: error("The API key is not set.")
+
+                    val deepSeekClient = DeepSeekLLMClient(apiKey)
+
+                    val agent = AIAgent(
+                        promptExecutor = SingleLLMPromptExecutor(deepSeekClient),
+                        llmModel = DeepSeekModels.DeepSeekChat,
+                        systemPrompt = """
+                            You are a native-level English translator who specializes in casual, conversational language.
+                            Translate the Japanese text into friendly, natural English as it would appear in casual speech or social media posts.
+                            Keep the tone consistent with the original (humorous, emotional, etc.), and avoid sounding robotic or overly formal.
+                        """.trimIndent(),
+                        temperature = 0.5,
+                    )
+
+                    val result = agent.run(request.text)
+
+                    call.respond(HttpStatusCode.OK, TranslateResponse(result))
+                }
             } catch (ex: IllegalStateException) {
-                call.respond(HttpStatusCode.BadRequest)
+                call.respond(HttpStatusCode.BadRequest, ex.message ?: "Bad Request")
             } catch (ex: SerializationException) {
-                call.respond(HttpStatusCode.BadRequest)
+                call.respond(HttpStatusCode.BadRequest, ex.message ?: "Bad Request")
+            } catch (ex: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, ex.message ?: "Internal Server Error")
             }
         }
 
