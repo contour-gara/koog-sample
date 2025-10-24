@@ -6,7 +6,7 @@ RUN jlink \
     --strip-java-debug-attributes \
     --no-header-files \
     --no-man-pages \
-    --add-modules java.base,java.desktop,java.instrument,java.logging,java.management,java.naming,jdk.jfr,jdk.unsupported \
+    --add-modules java.base,java.desktop,java.instrument,java.logging,java.management,java.naming,jdk.jfr,jdk.unsupported,jdk.crypto.ec \
     --output jre-min
 
 FROM debian:bookworm-20251020-slim
