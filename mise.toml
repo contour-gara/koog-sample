@@ -19,7 +19,7 @@ jdeps \
 app/build/libs/app.jar
 """
 
-[tasks.buildWithFrontend]
+[tasks.build-with-frontend]
 description = "Build backend and frontend"
 run = """
 (cd frontend && npm install && npm run build)
