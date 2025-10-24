@@ -1,5 +1,6 @@
 [tools]
 java = "corretto-21.0.9.10.1"
+node = "24.10.0"
 
 [env]
 DEEPSEEK_API_KEY = "dummy"
@@ -16,4 +17,12 @@ jdeps \
 --multi-release 21 \
 -quiet \
 app/build/libs/app.jar
+"""
+
+[tasks.buildWithFrontend]
+description = "Build backend and frontend"
+run = """
+(cd frontend && npm install && npm run build)
+cp -pr frontend/dist/* app/src/main/resources/frontend/
+./gradlew clean app:build -x test
 """

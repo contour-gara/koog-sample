@@ -3,6 +3,7 @@ kotlin = "2.2.20"
 
 ktor = "3.3.1"
 koog = "0.5.1"
+kotlinx-serialization = "1.9.0"
 logback = "1.5.20"
 
 kotest = "6.0.4"
@@ -12,6 +13,7 @@ ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "kto
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-config-yaml = { module = "io.ktor:ktor-server-config-yaml", version.ref = "ktor" }
 koog-agents = { module = "ai.koog:koog-agents", version.ref = "koog" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
@@ -21,3 +23,4 @@ ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
