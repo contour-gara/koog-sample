@@ -13,3 +13,11 @@ services:
       - "8080:8080"
     environment:
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - CLOUDFLARE_TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}

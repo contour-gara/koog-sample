@@ -4,6 +4,7 @@ node = "24.10.0"
 
 [env]
 DEEPSEEK_API_KEY = "dummy"
+CLOUDFLARE_TUNNEL_TOKEN = "dummy"
 
 [tasks.jdeps]
 description = "Show module dependencies of jar"
